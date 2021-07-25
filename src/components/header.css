@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+}
+
+body {
+  background-image: url('../assets/pattern.svg');
+  min-height: 100vh;
+}
+
+.wrapper {
+  width: 100%;
+  margin: auto;
+  position: relative;
+  max-width: 1920px;
+  background: rgba(244, 245, 249, 0.92);
+  min-height: 100vh;
+}
+
+.top {
+  height: 35vh;
+  overflow: hidden;
+  background-image: url("../assets/banner2.jpg");
+  position: relative;
+}
+
+.top svg {
+  fill: #f5f6f9;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.trademark--text {
+  color:#fff;
+  font-weight:800;
+  text-shadow:rgba(0, 0, 0, 0.5) 1px 1px 1px;
+}
+
+.button--right {
+  position: absolute;
+  right: 0;
+  top: 10px;
+}
+.button--left {
+  position: absolute;
+  left: 0;
+  top: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+}
