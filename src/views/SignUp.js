@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Header from "../components/Header";
 import firebase from '../firebase';
+import * as firebaseui from "firebaseui";
 
 function Copyright() {
     return (
@@ -50,164 +51,62 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
-    },
+    }
 }));
 
 export default function SignUp() {
     const classes = useStyles();
 
-    const [number, setNumber] = React.useState('+380505670898')
+    const [number, setNumber] = React.useState();
+    const [codeVerified, setCodeVerified] = React.useState(false);
 
-    const window = {
-        recaptchaVerifier: undefined
-    };
-
-    function onChangeHandler(event){
-        const { name, value } = event.target;
-        setNumber(value)
-    };
-    function onSignInSubmit(e) {
-        e.preventDefault();
-        setUpRecaptcha();
-        const phoneNumber = number;
-        console.log(phoneNumber)
-        const appVerifier = window.recaptchaVerifier;
-        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-
-                const code = window.prompt('enter code');
-                confirmationResult.confirm(code).then((result) => {
-                    // User signed in successfully.
-                    const user = result.user;
-                    console.log(result)
-                    console.log(user)
-                    // ...
-                }).catch((error) => {
-                    // User couldn't sign in (bad verification code?)
-                    // ...
-                });
-                // ...
-            }).catch((error) => {
-            // Error; SMS not sent
-            // ...
-        });
-    }
-    function setUpRecaptcha() {
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'invisible',
-            'callback': (response) => {
-                console.log('recaptcha solved')
-                onSignInSubmit();
-            }
-        });
-        // [END auth_phone_recaptcha_verifier_invisible]
-    }
-
-    function onSubmitOtp(e) {
-        e.preventDefault();
-        let otpInput = number;
-        let optConfirm = window.confirmationResult;
-        // console.log(codee);
-        optConfirm
-            .confirm(otpInput)
-            .then(function (result) {
-                // User signed in successfully.
-                // console.log("Result" + result.verificationID);
-                let user = result.user;
-                console.log(user)
-            })
-            .catch(function (error) {
-                console.log(error);
-                alert("Incorrect OTP");
-            });
-    };
-
-    function recaptchaVerifierVisible() {
-        // [START auth_phone_recaptcha_verifier_visible]
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-            'size': 'normal',
-            'callback': (response) => {
-                // reCAPTCHA solved, allow signInWithPhoneNumber.
-                // ...
+    React.useEffect(() => {
+        const uiConfig = {
+            signInOptions: [{
+                provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+                recaptchaParameters: {
+                    type: 'image',
+                    size: 'normal',
+                    badge: 'bottomleft'
+                },
+                defaultCountry: 'UA'
+            }],
+            callbacks: {
+                signInSuccessWithAuthResult: async (authResult, redirectUrl) => {
+                    const { user } = authResult;
+                    setNumber(user.phoneNumber);
+                    setCodeVerified(true);
+                    authResult.user.getIdTokenResult().then(tokenResult => {
+                        console.log(tokenResult)
+                    });
+                    return false;
+                }
             },
-            'expired-callback': () => {
-                // Response expired. Ask user to solve reCAPTCHA again.
-                // ...
-            }
-        });
-        // [END auth_phone_recaptcha_verifier_visible]
-    }
+            signInSuccessUrl: "/signup"
+        };
 
-    function recaptchaVerifierSimple() {
-        // [START auth_phone_recaptcha_verifier_simple]
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
-        // [END auth_phone_recaptcha_verifier_simple]
-    }
-
-    function recaptchaRender() {
-        /** @type {firebase.auth.RecaptchaVerifier} */
-        const recaptchaVerifier = window.recaptchaVerifier;
-
-        // [START auth_phone_recaptcha_render]
-        recaptchaVerifier.render().then((widgetId) => {
-            window.recaptchaWidgetId = widgetId;
-        });
-        // [END auth_phone_recaptcha_render]
-    }
-
-    function phoneSignIn() {
-        function getPhoneNumberFromUserInput() {
-            return "+15558675309";
+        if (firebaseui.auth.AuthUI.getInstance()) {
+            const ui = firebaseui.auth.AuthUI.getInstance()
+            ui.start('#firebaseui-auth-container', uiConfig)
+        } else {
+            const ui = new firebaseui.auth.AuthUI(firebase.auth())
+            ui.start('#firebaseui-auth-container', uiConfig)
         }
 
-        // [START auth_phone_signin]
-        const phoneNumber = getPhoneNumberFromUserInput();
-        const appVerifier = window.recaptchaVerifier;
-        firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
-                window.confirmationResult = confirmationResult;
-                // ...
-            }).catch((error) => {
-            // Error; SMS not sent
-            // ...
-        });
-        // [END auth_phone_signin]
+    }, [])
+
+    if(!codeVerified) {
+        return (
+            <div>
+                <Header>
+                    <Container className={classes.container} component="main" maxWidth="xs">
+                        <div id="firebaseui-auth-container" />
+                    </Container>
+                </Header>
+            </div>
+        )
     }
 
-    function verifyCode() {
-        function getCodeFromUserInput() {
-            return "1234";
-        }
-
-        /** @type {firebase.auth.ConfirmationResult} */
-        const confirmationResult = undefined;
-
-        // [START auth_phone_verify_code]
-        const code = getCodeFromUserInput();
-        confirmationResult.confirm(code).then((result) => {
-            // User signed in successfully.
-            const user = result.user;
-            // ...
-        }).catch((error) => {
-            // User couldn't sign in (bad verification code?)
-            // ...
-        });
-        // [END auth_phone_verify_code]
-    }
-
-    function getRecaptchaResponse() {
-        const recaptchaWidgetId = "...";
-        const grecaptcha = {};
-
-        // [START auth_get_recaptcha_response]
-        const recaptchaResponse = grecaptcha.getResponse(recaptchaWidgetId);
-        // [END auth_get_recaptcha_response]
-    }
     return (
         <div>
             <Header>
@@ -220,7 +119,7 @@ export default function SignUp() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <form className={classes.form} onSubmit={onSignInSubmit}
+                    <form className={classes.form}
                     >
                         <div id="recaptcha-container"/>
                         <Grid container spacing={2}>
@@ -239,6 +138,8 @@ export default function SignUp() {
                                     placeholder="+38"
                                     minLength="13"
                                     maxLength="13"
+                                    value={number}
+                                    disabled
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -277,9 +178,6 @@ export default function SignUp() {
                                 </Link>
                             </Grid>
                         </Grid>
-                    </form>
-                    <form onSubmit={onSubmitOtp}>
-                        <input type="text" onChange={onChangeHandler}/>
                     </form>
                 </div>
                 <Box mt={5}>

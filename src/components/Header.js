@@ -1,6 +1,17 @@
 import React from 'react';
 import './header.css';
+import {useHistory} from 'react-router-dom';
+import * as firebaseui from 'firebaseui';
+import firebase from 'firebase';
+import 'firebaseui/dist/firebaseui.css'
+
 function Header({children}) {
+
+    let history = useHistory();
+    const goToSignUp = () => {
+        history.push('/signup')
+    }
+
     return (
         <div className="wrapper">
             <div className="top">
@@ -25,7 +36,7 @@ function Header({children}) {
                         </button>
                     </div>
                     <div className="button--left">
-                        <button className="btn btn-success">
+                        <button className="btn btn-success" onClick={goToSignUp}>
                             Register
                         </button>
                     </div>
