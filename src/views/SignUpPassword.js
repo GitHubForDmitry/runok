@@ -79,8 +79,8 @@ function SignUpPassword(props) {
         firebase.auth().createUserWithEmailAndPassword(email + '@runok.com', password)
             .then((userCredential) => {
                 const user = userCredential.user;
+                localStorage.setItem('current_user', JSON.stringify(userCredential.user.providerData))
                 history.push('/')
-
         })
             .catch((error) => {
                 const errorCode = error.code;
