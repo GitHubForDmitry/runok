@@ -1,8 +1,6 @@
 import React from 'react';
 import './header.css';
 import {useHistory} from 'react-router-dom';
-import * as firebaseui from 'firebaseui';
-import firebase from 'firebase';
 import 'firebaseui/dist/firebaseui.css'
 
 function Header({children}) {

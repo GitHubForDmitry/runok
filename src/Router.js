@@ -4,6 +4,7 @@ import Admin from "./views/Admin";
 import Catalog from "./views/Catalog";
 import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
+import SignUpPassword from "./views/SignUpPassword";
 
 const RouterComponent = () => {
     return (
@@ -20,6 +21,9 @@ const RouterComponent = () => {
                 </Route>
                 <Route path="/signup">
                     <SignUp />
+                </Route>
+                <Route path="/signuppassword">
+                    <SignUpPassword />
                 </Route>
             </Switch>
         </Router>
