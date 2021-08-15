@@ -13,18 +13,26 @@ function Header({children}) {
     const goToSignUp = () => {
         history.push('/signup')
     }
+    const createPost = () => {
+        history.push('/createpost')
+    }
 
+    const logOut = () => {
+        firebase.auth().signOut().then(() => {
+            alert(`Пользователь ${currentUser.email} вышел`)
+        }).catch((error) => {
+            // An error happened.
+        });
+    }
     useEffect(() => {
-        setCurrentUser(localStorage.getItem('current_user'))
         firebase.auth().onAuthStateChanged((user) => {
             if (user !== null) {
                 setCurrentUser(user)
             } else {
-                console.log('user not found')
+                console.log('user not found');
+                console.log(currentUser)
             }
         });
-        console.log(localStorage.getItem('current_user'))
-        console.log(currentUser)
     }, [])
     return (
         <div className="wrapper">
@@ -45,13 +53,17 @@ function Header({children}) {
                                 className="trademark--text">
                                 Ищи что угодно, когда угодно</span>
                         </div>
-                        <div className="flex flex--between mb-2">
+                        <div>
                             {currentUser !== null && currentUser.email}
                             {currentUser
                                 ? (
                                     <div className="button--right">
-                                        <Button variant="contained" color="primary">
+                                        <Button variant="contained" color="primary"  onClick={createPost}>
                                             Добавить обьявление
+                                        </Button>
+                                        <br/> <br/>
+                                        <Button variant="contained" color="primary"  onClick={logOut}>
+                                             Выйти
                                         </Button>
                                     </div>
                                 ) :
@@ -65,7 +77,7 @@ function Header({children}) {
                             }
                         </div>
 
-                        <div className="d-flex justify-content-center mb-4">
+                        <div className="flex-center">
                             <form className="form-inline">
                                 <input className="form-control mr-sm-2" type="search" placeholder="Search"
                                        aria-label="Search"/>

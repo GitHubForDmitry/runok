@@ -5,6 +5,7 @@ import Catalog from "./views/Catalog";
 import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
 import SignUpPassword from "./views/SignUpPassword";
+import CreatePost from "./views/CreatePost";
 
 const RouterComponent = () => {
     return (
@@ -24,6 +25,9 @@ const RouterComponent = () => {
                 </Route>
                 <Route path="/signuppassword">
                     <SignUpPassword />
+                </Route>
+                <Route path="/createpost">
+                    <CreatePost />
                 </Route>
             </Switch>
         </Router>
