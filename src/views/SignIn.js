@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Header from "../components/Header";
+import firebase from "../firebase";
+import {useHistory} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {checkPassword} from "../store/features/auth";
 
 function Copyright() {
     return (
@@ -48,9 +53,32 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
     const classes = useStyles();
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    let history = useHistory();
+    const dispatch = useDispatch();
+    const submitWithEmailAndPassword = (e) => {
+        console.log(email, password)
+        e.preventDefault();
+        firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+            dispatch(checkPassword(true))
+            history.push('/createpost')
+        })
+            .catch(function(error) {
+                dispatch(checkPassword(false))
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                if (errorCode === 'auth/wrong-password') {
+                    alert('Wrong password.');
+                } else {
+                    alert(errorMessage);
+                }
+                console.log(error);
+            });
+    }
     return (
-        <Container component="main" maxWidth="xs">
+        <Header>
+            <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -59,17 +87,18 @@ export default function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} noValidate onSubmit={submitWithEmailAndPassword}>
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
                         id="email"
-                        label="Email Address"
+                        label="+380"
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={e => setEmail(e.target.value + '@runok.com') }
                     />
                     <TextField
                         variant="outlined"
@@ -77,10 +106,11 @@ export default function SignIn() {
                         required
                         fullWidth
                         name="password"
-                        label="Password"
+                        label="Ваш пароль"
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={e => setPassword(e.target.value)}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -113,5 +143,6 @@ export default function SignIn() {
                 <Copyright />
             </Box>
         </Container>
+        </Header>
     );
 }

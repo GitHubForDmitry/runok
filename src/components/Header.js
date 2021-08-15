@@ -5,21 +5,26 @@ import 'firebaseui/dist/firebaseui.css'
 import firebase from "../firebase";
 import {Button} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
+import {useSelector} from "react-redux";
 
 function Header({children}) {
+    const passwordFill = useSelector((state) => state.checkUser.password);
 
     let history = useHistory();
     const [currentUser, setCurrentUser] = useState(null);
-    const goToSignUp = () => {
-        history.push('/signup')
-    }
     const createPost = () => {
-        history.push('/createpost')
+        console.log(passwordFill, 'passwordFill')
+        if (!passwordFill) {
+            history.push('/signup')
+        } else {
+            history.push('/createpost')
+        }
     }
 
     const logOut = () => {
         firebase.auth().signOut().then(() => {
             alert(`Пользователь ${currentUser.email} вышел`)
+            history.push('/')
         }).catch((error) => {
             // An error happened.
         });
@@ -54,27 +59,15 @@ function Header({children}) {
                                 Ищи что угодно, когда угодно</span>
                         </div>
                         <div>
-                            {currentUser !== null && currentUser.email}
-                            {currentUser
-                                ? (
-                                    <div className="button--right">
-                                        <Button variant="contained" color="primary"  onClick={createPost}>
-                                            Добавить обьявление
-                                        </Button>
-                                        <br/> <br/>
-                                        <Button variant="contained" color="primary"  onClick={logOut}>
-                                             Выйти
-                                        </Button>
-                                    </div>
-                                ) :
-                                (
-                                    <div className="button--right">
-                                        <Button variant="contained" color="primary" onClick={goToSignUp}>
-                                            Добавить обьявление
-                                        </Button>
-                                    </div>
-                                )
-                            }
+                            <div className="button--right">
+                                <Button variant="contained" color="primary"  onClick={createPost}>
+                                    Добавить обьявление
+                                </Button>
+                                <br/> <br/>
+                                <Button variant="contained" color="primary"  onClick={logOut}>
+                                    Выйти
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="flex-center">

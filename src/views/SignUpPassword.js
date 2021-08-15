@@ -16,6 +16,8 @@ import Box from "@material-ui/core/Box";
 import {makeStyles} from "@material-ui/core/styles";
 import {useHistory} from "react-router-dom";
 import Notify from "../components/Notify";
+import { useDispatch } from 'react-redux'
+import { checkPassword } from '../store/features/auth'
 
 function Copyright() {
     return (
@@ -53,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     }
 }));
-function SignUpPassword(props) {
+function SignUpPassword() {
+    const dispatch = useDispatch()
     const classes = useStyles();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -73,17 +76,18 @@ function SignUpPassword(props) {
         });
     }, [])
 
+    const changePassword = (e) => setPassword(e.target.value)
 
     const sendEmailAndPassword = (e) => {
         e.preventDefault();
         firebase.auth().createUserWithEmailAndPassword(email + '@runok.com', password)
             .then((userCredential) => {
-                const user = userCredential.user;
+                dispatch(checkPassword(true))
                 localStorage.setItem('current_user', JSON.stringify(userCredential.user.providerData))
                 history.push('/')
         })
             .catch((error) => {
-                const errorCode = error.code;
+                dispatch(checkPassword(false))
                 const errorMessage = error.message;
                 setErrorMessage(errorMessage);
                 setTimeout(() => {
@@ -140,7 +144,7 @@ function SignUpPassword(props) {
                                         id="password"
                                         value={password}
                                         autoComplete="current-password"
-                                        onChange={e => setPassword(e.target.value)}
+                                        onChange={changePassword}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -163,7 +167,7 @@ function SignUpPassword(props) {
                             </Button>
                             <Grid container justifyContent="flex-end">
                                 <Grid item>
-                                    <Link href="#" variant="body2">
+                                    <Link href="/signin" variant="body2">
                                         Already have an account? Sign in
                                     </Link>
                                 </Grid>

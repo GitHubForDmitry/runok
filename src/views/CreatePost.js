@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Header from "../components/Header";
 import Container from "@material-ui/core/Container";
+import { useSelector } from "react-redux";
+import SignIn from "./SignIn";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,8 +22,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreatePost() {
     const classes = useStyles();
+    const passwordFill = useSelector((state) => state.checkUser.password);
 
-    return (
+    return passwordFill ? (
         <div>
             <Header>
                 <Container className={classes.container} component="main" maxWidth="xl">
@@ -40,5 +43,7 @@ export default function CreatePost() {
             </Header>
         </div>
 
+    ): (
+        <SignIn/>
     );
 }
