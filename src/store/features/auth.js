@@ -1,13 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
-
+import firebase from "../../firebase";
 export const authUSer = createSlice({
     name: 'auth',
     initialState: {
-        password: false
+        password: false,
+        currentUser: null
     },
     reducers: {
         checkPassword: ((state, action) => {
             state.password = action.payload;
+        }),
+        getCurrentUser: ((state, action) => {
+            state.currentUser = firebase.auth().onAuthStateChanged()
         }),
     },
 })

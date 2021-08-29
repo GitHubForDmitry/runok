@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Header from "../components/Header";
 import firebase from '../firebase';
-import * as firebaseui from "../../node_modules/firebaseui/dist/npm__ru.js";
+// import * as firebaseui from "../../node_modules/firebaseui/dist/npm__ru.js";
+import * as firebaseui from "../../node_modules/firebaseui/";
 
 const useStyles = makeStyles((theme) => ({
     container: {

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Admin from "./views/Admin";
-import Catalog from "./views/Catalog";
+import Wrapper from "./views/Wrapper";
 import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
 import SignUpPassword from "./views/SignUpPassword";
@@ -12,7 +12,7 @@ const RouterComponent = () => {
         <Router>
             <Switch>
                 <Route exact path="/">
-                    <Catalog />
+                    <Wrapper />
                 </Route>
                 <Route path="/admin">
                     <Admin />

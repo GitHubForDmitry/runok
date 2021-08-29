@@ -23,8 +23,8 @@ function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
             {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            <Link color="inherit" href="runok.com.ua/copyright">
+                runok.com.ua
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
@@ -89,7 +89,13 @@ function SignUpPassword() {
             .catch((error) => {
                 dispatch(checkPassword(false))
                 const errorMessage = error.message;
-                setErrorMessage(errorMessage);
+                console.log(error)
+                console.log(errorMessage)
+                if (errorMessage === 'Password should be at least 6 characters') {
+                    setErrorMessage('Пароль должен быть не менее 6 символов');
+                } else if (errorMessage === 'The email address is already in use by another account.') {
+                    setErrorMessage('Вы уже регестрировались, вспомните пароль или обратитесь в техподдержку');
+                }
                 setTimeout(() => {
                     setErrorMessage('')
                 }, 3000)
@@ -108,7 +114,7 @@ function SignUpPassword() {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign up
+                            Вы зарегистрировали телефон, добавьте пароль, который можно легко запомнить
                         </Typography>
                         <form className={classes.form}
                         >
@@ -147,12 +153,12 @@ function SignUpPassword() {
                                         onChange={changePassword}
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <FormControlLabel
-                                        control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                        label="I want to receive inspiration, marketing promotions and updates via email."
-                                    />
-                                </Grid>
+                                {/*<Grid item xs={12}>*/}
+                                {/*    <FormControlLabel*/}
+                                {/*        control={<Checkbox value="allowExtraEmails" color="primary" />}*/}
+                                {/*        label="I want to receive inspiration, marketing promotions and updates via email."*/}
+                                {/*    />*/}
+                                {/*</Grid>*/}
                             </Grid>
                             <Button
                                 fullWidth
@@ -163,12 +169,12 @@ function SignUpPassword() {
                                 disabled={!password.length}
                                 type="submit"
                             >
-                                Sign Up
+                                Зарегистрируйся
                             </Button>
                             <Grid container justifyContent="flex-end">
                                 <Grid item>
                                     <Link href="/signin" variant="body2">
-                                        Already have an account? Sign in
+                                        Уже регестрировались? Войдите
                                     </Link>
                                 </Grid>
                             </Grid>

@@ -1,44 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, {useContext, useEffect} from 'react';
 import './header.css';
 import {useHistory} from 'react-router-dom';
 import 'firebaseui/dist/firebaseui.css'
 import firebase from "../firebase";
 import {Button} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
-import {useSelector} from "react-redux";
+import {AppContext} from "../context/AppWrapper";
 
 function Header({children}) {
-    const passwordFill = useSelector((state) => state.checkUser.password);
 
     let history = useHistory();
-    const [currentUser, setCurrentUser] = useState(null);
+    const { currentUser, setCurrentUser } = useContext(AppContext);
     const createPost = () => {
-        console.log(passwordFill, 'passwordFill')
-        if (!passwordFill) {
+        console.log(currentUser, 'currentUser')
+        if (!currentUser) {
             history.push('/signup')
         } else {
             history.push('/createpost')
         }
     }
 
+    const logIn = () => {
+        history.push('/signin')
+    }
+
     const logOut = () => {
         firebase.auth().signOut().then(() => {
             alert(`Пользователь ${currentUser.email} вышел`)
+            setCurrentUser(null)
             history.push('/')
         }).catch((error) => {
             // An error happened.
         });
     }
+
     useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user !== null) {
-                setCurrentUser(user)
-            } else {
-                console.log('user not found');
-                console.log(currentUser)
-            }
-        });
-    }, [])
+        console.log(currentUser, 'currentUser')
+    }, [currentUser])
     return (
         <div className="wrapper">
             <div className="top">
@@ -64,9 +62,16 @@ function Header({children}) {
                                     Добавить обьявление
                                 </Button>
                                 <br/> <br/>
-                                <Button variant="contained" color="primary"  onClick={logOut}>
-                                    Выйти
-                                </Button>
+                                {currentUser ? (
+                                    <Button variant="contained" color="primary"  onClick={logOut}>
+                                        Выйти
+                                    </Button>
+                                ) : (
+                                    <Button variant="contained" color="primary"  onClick={logIn}>
+                                        Войти
+                                    </Button>
+                                )}
+
                             </div>
                         </div>
 

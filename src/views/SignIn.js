@@ -17,6 +17,8 @@ import firebase from "../firebase";
 import {useHistory} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {checkPassword} from "../store/features/auth";
+import SimpleModal from "../components/Modal";
+import Notify from "../components/Notify";
 
 function Copyright() {
     return (
@@ -55,6 +57,7 @@ export default function SignIn() {
     const classes = useStyles();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     let history = useHistory();
     const dispatch = useDispatch();
     const submitWithEmailAndPassword = (e) => {
@@ -68,16 +71,21 @@ export default function SignIn() {
                 dispatch(checkPassword(false))
                 const errorCode = error.code;
                 const errorMessage = error.message;
+                if (errorMessage === 'There is no user record corresponding to this identifier. The user may have been deleted.') {
+                    setErrorMessage('Нет такого пользователя, зарегестрируйтесь')
+                }
+                if (errorCode === 'auth/user-not-found') {
+                    setErrorMessage('Пользователь не найден')
+                }
                 if (errorCode === 'auth/wrong-password') {
-                    alert('Wrong password.');
-                } else {
-                    alert(errorMessage);
+                    setErrorMessage('Не правильный пароль');
                 }
                 console.log(error);
             });
     }
     return (
         <Header>
+            <Notify message={errorMessage} openNotify={!!errorMessage} severity="error" />
             <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={classes.paper}>
@@ -85,7 +93,7 @@ export default function SignIn() {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Войти
                 </Typography>
                 <form className={classes.form} noValidate onSubmit={submitWithEmailAndPassword}>
                     <TextField
@@ -114,7 +122,7 @@ export default function SignIn() {
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
-                        label="Remember me"
+                        label="Запоминть меня"
                     />
                     <Button
                         type="submit"
@@ -123,17 +131,15 @@ export default function SignIn() {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign In
+                        Войти
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
+                            <SimpleModal />
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
+                            <Link href="/signup" variant="body2" >
+                                {"Не зарегистрирован? Зарегистрируйся"}
                             </Link>
                         </Grid>
                     </Grid>
