@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import firebase from "../firebase";
-import RecipeReviewCard from "../components/Card";
+import ProductCard from "../components/Card";
 import {Grid} from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,10 +17,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Catalog(props) {
-
+    let history = useHistory();
     const [posts, setPosts] = useState([]);
     const classes = useStyles();
-
     useEffect(() => {
         const fetchData = async () => {
             const db = firebase.firestore();
@@ -30,15 +30,20 @@ function Catalog(props) {
         fetchData();
     }, []);
 
+    if (!sessionStorage.getItem('user')) {
+        history.push('/signin')
+    }
     return (
         <div className={classes.root}>
             <div className={classes.container}>
                 <Grid container spacing={3}>
-                        {posts.map(post => (
-                            <Grid item lg={3} xs={12} sm={6} key={post.id} >
-                                <RecipeReviewCard post={post} />
-                            </Grid>
-                        ))}
+                    {posts.length > 0 ? posts.map(post => (
+                        <Grid item lg={3} xs={12} sm={6} key={post.id} >
+                            <ProductCard post={post} />
+                        </Grid>)
+                    ) : <div>there is no posts</div>}
+                        {
+                            }
                 </Grid>
             </div>
         </div>

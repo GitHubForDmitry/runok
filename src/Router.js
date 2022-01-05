@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Admin from "./views/Admin";
 import Wrapper from "./views/Wrapper";
@@ -6,6 +6,7 @@ import SignIn from "./views/SignIn";
 import SignUp from "./views/SignUp";
 import SignUpPassword from "./views/SignUpPassword";
 import CreatePost from "./views/CreatePost";
+import EditPost from "./views/EditPost";
 
 const RouterComponent = () => {
     return (
@@ -29,6 +30,7 @@ const RouterComponent = () => {
                 <Route path="/createpost">
                     <CreatePost />
                 </Route>
+                <Route path="/posts/:id"  component={EditPost} />
             </Switch>
         </Router>
     );

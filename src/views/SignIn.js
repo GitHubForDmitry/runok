@@ -61,11 +61,10 @@ export default function SignIn() {
     let history = useHistory();
     const dispatch = useDispatch();
     const submitWithEmailAndPassword = (e) => {
-        console.log(email, password)
         e.preventDefault();
         firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
             dispatch(checkPassword(true))
-            history.push('/createpost')
+            history.push('/')
         })
             .catch(function(error) {
                 dispatch(checkPassword(false))

@@ -22,7 +22,7 @@ export default function Notify({message, severity, openNotify}) {
 
     React.useEffect(() => {
         setOpen(openNotify)
-    }, [message])
+    }, [message, openNotify])
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {

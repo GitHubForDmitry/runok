@@ -12,7 +12,6 @@ function Header({children}) {
     let history = useHistory();
     const { currentUser, setCurrentUser } = useContext(AppContext);
     const createPost = () => {
-        console.log(currentUser, 'currentUser')
         if (!currentUser) {
             history.push('/signup')
         } else {
@@ -35,7 +34,6 @@ function Header({children}) {
     }
 
     useEffect(() => {
-        console.log(currentUser, 'currentUser')
     }, [currentUser])
     return (
         <div className="wrapper">

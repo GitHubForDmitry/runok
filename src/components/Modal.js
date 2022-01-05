@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
 
 function rand() {
     return Math.round(Math.random() * 20) - 10;

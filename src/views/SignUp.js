@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Header from "../components/Header";
 import firebase from '../firebase';
-// import * as firebaseui from "../../node_modules/firebaseui/dist/npm__ru.js";
 import * as firebaseui from "../../node_modules/firebaseui/";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,7 +21,6 @@ export default function SignUp() {
             if (user) {
                 console.log(user)
             } else {
-                console.log()
             }
         });
     }, [])
@@ -76,7 +74,7 @@ export default function SignUp() {
             ui.start('#firebaseui-auth-container', uiConfig)
         }
 
-    }, [])
+    }, [userExist])
 
         return (
             <div>

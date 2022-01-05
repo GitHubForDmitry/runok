@@ -9,24 +9,25 @@ const AppProvider = ({ children }) => {
 
     const loadUser = () => {
         setLoadingUser(true);
-        console.log(loadingUser, 'loadingUser')
+        if (sessionStorage.getItem('user')) {
+            setCurrentUser(sessionStorage.getItem('user'));
+            return;
+        }
         try {
             firebase.auth().onAuthStateChanged((user) => {
+
                 if (user !== null) {
-                    console.log('user found');
+                    sessionStorage.setItem('user', JSON.stringify(user.providerData[0]));
                     setCurrentUser(user)
                     setLoadingUser(false);
                 } else {
-                    console.log('user not found');
                     setLoadingUser(false);
-                    console.log(currentUser)
                 }
             });
         } catch (e) {
             console.log(e, 'error loading user')
         }
         finally {
-            console.log(loadingUser, 2)
         }
     }
 

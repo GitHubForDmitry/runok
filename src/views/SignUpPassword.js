@@ -8,8 +8,6 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
@@ -66,7 +64,6 @@ function SignUpPassword() {
     React.useEffect(() => {
         firebase.auth().onAuthStateChanged((user) => {
             if (user.phoneNumber !== null) {
-                console.log(user)
                 setEmail(user.phoneNumber)
             } else if (user.email) {
                 setEmail(user.email.slice(0, user.email.indexOf('@')))
@@ -89,8 +86,6 @@ function SignUpPassword() {
             .catch((error) => {
                 dispatch(checkPassword(false))
                 const errorMessage = error.message;
-                console.log(error)
-                console.log(errorMessage)
                 if (errorMessage === 'Password should be at least 6 characters') {
                     setErrorMessage('Пароль должен быть не менее 6 символов');
                 } else if (errorMessage === 'The email address is already in use by another account.') {
@@ -99,7 +94,6 @@ function SignUpPassword() {
                 setTimeout(() => {
                     setErrorMessage('')
                 }, 3000)
-                console.log(errorMessage)
             });
     }
 

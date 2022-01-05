@@ -13,6 +13,10 @@ import Link from '@material-ui/core/Link';
 import { red } from '@material-ui/core/colors';
 import clsx from 'clsx';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,16 +48,31 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function RecipeReviewCard({post}) {
+export default function ProductCard({post}) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-
+    let history = useHistory();
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
-    console.log(post,'postpostpost')
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleEdit = (post) => {
+        history.push('/posts/' + post.id);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    if (!sessionStorage.getItem('user')) {
+        history.push('/signin')
+    }
     return (
+
         <Card className={classes.root}>
             <CardHeader
                 avatar={
@@ -63,7 +82,22 @@ export default function RecipeReviewCard({post}) {
                 }
                 title={post.category.map(product => product.title ).join(', ')}
                 subheader={post.date}
+                action={
+                    <IconButton aria-label="settings" onClick={handleClick}>
+                       <MoreVertIcon />
+                    </IconButton>
+                }
             />
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={() => handleEdit(post)}>Edit</MenuItem>
+                <MenuItem onClick={handleClose}>Delete</MenuItem>
+            </Menu>
             <CardMedia
                 className={classes.media}
                 image={post.urlImage ? post.urlImage : 'https://firebasestorage.googleapis.com/v0/b/runok-9db98.appspot.com/o/images%2Fno-photo.png?alt=media&token=a07bae63-29b7-4f12-8228-690d6d95ef3b'}
