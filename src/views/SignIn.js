@@ -59,15 +59,12 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     let history = useHistory();
-    const dispatch = useDispatch();
     const submitWithEmailAndPassword = (e) => {
         e.preventDefault();
         firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
-            dispatch(checkPassword(true))
             history.push('/')
         })
             .catch(function(error) {
-                dispatch(checkPassword(false))
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 if (errorMessage === 'There is no user record corresponding to this identifier. The user may have been deleted.') {

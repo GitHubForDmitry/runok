@@ -9,15 +9,15 @@ const AppProvider = ({ children }) => {
 
     const loadUser = () => {
         setLoadingUser(true);
-        if (sessionStorage.getItem('user')) {
-            setCurrentUser(sessionStorage.getItem('user'));
-            return;
-        }
+        // if (sessionStorage.getItem('user')) {
+        //     setCurrentUser(sessionStorage.getItem('user'));
+        //     return;
+        // }
         try {
             firebase.auth().onAuthStateChanged((user) => {
 
                 if (user !== null) {
-                    sessionStorage.setItem('user', JSON.stringify(user.providerData[0]));
+                    // sessionStorage.setItem('user', JSON.stringify(user.providerData[0]));
                     setCurrentUser(user)
                     setLoadingUser(false);
                 } else {
@@ -33,7 +33,11 @@ const AppProvider = ({ children }) => {
 
     useEffect(() => {
         loadUser()
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        console.log('currentUser', currentUser)
+    }, [currentUser])
     return (
         <AppContext.Provider
             value={{

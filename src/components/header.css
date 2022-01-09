@@ -20,6 +20,7 @@ body {
 
 .top {
   height: 35vh;
+  min-height: 350px;
   overflow: hidden;
   background-image: url("../assets/banner2.jpg");
   position: relative;

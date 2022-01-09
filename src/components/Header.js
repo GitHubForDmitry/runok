@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import './header.css';
 import {useHistory} from 'react-router-dom';
 import 'firebaseui/dist/firebaseui.css'
@@ -6,6 +6,7 @@ import firebase from "../firebase";
 import {Button} from "@material-ui/core";
 import Container from "@material-ui/core/Container";
 import {AppContext} from "../context/AppWrapper";
+import SearchProduct from "./Search";
 
 function Header({children}) {
 
@@ -24,17 +25,18 @@ function Header({children}) {
     }
 
     const logOut = () => {
+        console.log('logout')
         firebase.auth().signOut().then(() => {
+            localStorage.removeItem('user');
+            console.log('logout2')
             alert(`Пользователь ${currentUser.email} вышел`)
-            setCurrentUser(null)
-            history.push('/')
+            setCurrentUser(null);
+            history.push('/signin')
         }).catch((error) => {
             // An error happened.
         });
     }
 
-    useEffect(() => {
-    }, [currentUser])
     return (
         <div className="wrapper">
             <div className="top">
@@ -74,10 +76,7 @@ function Header({children}) {
                         </div>
 
                         <div className="flex-center">
-                            <form className="form-inline">
-                                <input className="form-control mr-sm-2" type="search" placeholder="Search"
-                                       aria-label="Search"/>
-                            </form>
+                            <SearchProduct />
                         </div>
                     </div>
                     <svg viewBox="0 0 1440 120" className="wave">

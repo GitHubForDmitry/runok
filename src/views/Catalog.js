@@ -30,9 +30,6 @@ function Catalog(props) {
         fetchData();
     }, []);
 
-    if (!sessionStorage.getItem('user')) {
-        history.push('/signin')
-    }
     return (
         <div className={classes.root}>
             <div className={classes.container}>

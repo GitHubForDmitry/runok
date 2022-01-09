@@ -68,9 +68,7 @@ export default function ProductCard({post}) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    if (!sessionStorage.getItem('user')) {
-        history.push('/signin')
-    }
+
     return (
 
         <Card className={classes.root}>
